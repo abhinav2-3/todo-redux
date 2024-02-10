@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { addToDo } from "./features/todo/todoSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { addToDo, removeToDo } from "./features/todo/todoSlice";
 
 function App() {
   const [input, setInput] = useState("");
@@ -9,14 +9,14 @@ function App() {
   const addToDoHandler = (e) => {
     e.preventDefault();
     dispatch(addToDo(input));
-    console.log(input);
     setInput("");
   };
-  console.log(input);
+
+  const todoList = useSelector((state) => state.todos);
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-4">Basic Todo App</h1>
+    <div className="container mx-auto p-4 bg-zinc-900 w-full h-screen">
+      <h1 className="text-3xl text-white font-bold mb-4">Basic Todo App</h1>
       <form onSubmit={addToDoHandler} className="flex items-center mb-4">
         <input
           type="text"
@@ -34,21 +34,17 @@ function App() {
       </form>
 
       <ul className="list-disc">
-        {/* {todos.map((todo) => (
+        {todoList.map((todo) => (
           <li key={todo.id} className="flex items-center mb-2">
-            <input type="checkbox" checked={todo.completed} className="mr-2" />
-            <span
-              className={
-                todo.completed ? "text-gray-500 line-through" : "text-gray-700"
-              }
+            <span className="text-white">{todo.text}</span>
+            <button
+              onClick={() => dispatch(removeToDo(todo.id))}
+              className="ml-auto bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-md focus:outline-none"
             >
-              {todo.text}
-            </span>
-            <button className="ml-auto bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-md focus:outline-none">
               Remove
             </button>
           </li>
-        ))} */}
+        ))}
       </ul>
     </div>
   );
